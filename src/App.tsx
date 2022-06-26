@@ -1,4 +1,5 @@
-import PuzzleGrid from "./components/PuzzleGrid";
+import { Fragment } from "react";
+import PuzzleBoard from "./components/PuzzleBoard";
 import ShuffleButton from "./components/ShuffleButton";
 
 function App() {
@@ -14,7 +15,7 @@ function App() {
     .map(({ value }) => value);
 
   return (
-    <div className="grid place-items-center h-screen">
+    <Fragment>
       <main className="text-center p-4">
         <h1 className="text-4xl font-bold">Puzzle Challenge</h1>
         <div className="my-4">
@@ -23,10 +24,10 @@ function App() {
             15 <span className="font-normal">Tiles</span>
           </strong>
         </div>
-        <PuzzleGrid numbers={shuffled} />
+        <PuzzleBoard numbers={shuffled} />
         <ShuffleButton />
       </main>
-    </div>
+    </Fragment>
   );
 }
 

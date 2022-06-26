@@ -23,7 +23,7 @@ type Props = {
 //   },
 // };
 
-export default function PuzzleButton(props: Props) {
+export default function PuzzleTile(props: Props) {
   const [touched, setTouched] = useState(false);
 
   return (
@@ -34,17 +34,17 @@ export default function PuzzleButton(props: Props) {
       dragConstraints={{
         left: 0,
         right: 85,
-        bottom: 0,
-        top: 0,
+        top: 50,
+        bottom: 50,
       }}
-      dragDirectionLock
       dragElastic={false}
+      dragTransition={{ power: 0, timeConstant: 5000 }}
       onClick={() => {
         setTouched((prevState) => !prevState);
       }}
       className="w-20 h-20 p-4 grid place-items-center
      rounded-xl text-3xl font-bold bg-blue-600 text-white
-     hover:bg-blue-400 last-of-type:hidden"
+     hover:bg-blue-400"
     >
       {props.text}
     </motion.button>
