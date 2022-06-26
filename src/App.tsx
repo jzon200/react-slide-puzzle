@@ -1,24 +1,31 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import PuzzleGrid from "./components/PuzzleGrid";
+import ShuffleButton from "./components/ShuffleButton";
 
 function App() {
+  const numbers: number[] = [];
+
+  for (let i = 1; i <= 16; i++) {
+    numbers.push(i);
+  }
+
+  const shuffled = numbers
+    .map((value) => ({ value, sort: Math.random() }))
+    .sort((a, b) => a.sort - b.sort)
+    .map(({ value }) => value);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="grid place-items-center h-screen">
+      <main className="text-center p-4">
+        <h1 className="text-4xl font-bold">Puzzle Challenge</h1>
+        <div className="my-4">
+          <strong className="text-lg text-blue-600">
+            11 <span className="font-normal">Moves | </span>
+            15 <span className="font-normal">Tiles</span>
+          </strong>
+        </div>
+        <PuzzleGrid numbers={shuffled} />
+        <ShuffleButton />
+      </main>
     </div>
   );
 }
