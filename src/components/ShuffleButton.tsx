@@ -1,5 +1,6 @@
 import { MdRefresh } from "react-icons/md";
 
+// TODO: implement the shuffle functionality
 export default function ShuffleButton() {
   return (
     <div className="flex m-4 justify-center">
