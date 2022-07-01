@@ -7,9 +7,9 @@ type Props = {
 
 export default function MainLayout(props: Props) {
   return (
-    <div className="p-4">
+    <Fragment>
       <Header />
       <main>{props.children}</main>
-    </div>
+    </Fragment>
   );
 }
