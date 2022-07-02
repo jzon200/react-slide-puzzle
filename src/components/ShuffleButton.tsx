@@ -1,10 +1,9 @@
-import { useContext } from "react";
 import { MdRefresh } from "react-icons/md";
-import { PuzzleDispatchContext } from "../context/puzzle-context";
+import { usePuzzleDispatch } from "../hooks";
 
 // TODO: implement the shuffle functionality
 export default function ShuffleButton() {
-  const dispatch = useContext(PuzzleDispatchContext)!;
+  const dispatch = usePuzzleDispatch();
 
   const handleShuffle = () => {
     dispatch({ type: "shuffled" });

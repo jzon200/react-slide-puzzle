@@ -11,7 +11,7 @@ type Props = {
   children: ReactNode;
 };
 
-export default function AppContextProvider({ children }: Props) {
+export default function PuzzleContextProvider({ children }: Props) {
   const [state, dispatch] = useImmerReducer(puzzleReducer, initialPuzzleState);
 
   return (

@@ -1,16 +1,16 @@
 import MainLayout from "./components/MainLayout";
 import PuzzleBoard from "./components/PuzzleBoard";
 import ShuffleButton from "./components/ShuffleButton";
-import AppContextProvider from "./context/PuzzleContextProvider";
+import PuzzleContextProvider from "./context/PuzzleContextProvider";
 
 function App() {
   return (
-    <AppContextProvider>
+    <PuzzleContextProvider>
       <MainLayout>
         <PuzzleBoard />
         <ShuffleButton />
       </MainLayout>
-    </AppContextProvider>
+    </PuzzleContextProvider>
   );
 }
 

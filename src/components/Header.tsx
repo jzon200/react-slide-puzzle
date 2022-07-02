@@ -1,8 +1,7 @@
-import { useContext } from "react";
-import { PuzzleContext } from "../context/puzzle-context";
+import { usePuzzleSelector } from "../hooks";
 
 export default function Header() {
-  const { moves } = useContext(PuzzleContext)!;
+  const { moves } = usePuzzleSelector();
 
   return (
     <header className="text-center">
