@@ -2,18 +2,19 @@ import { usePuzzleDispatch, usePuzzleSelector } from "../hooks";
 import PuzzleTile from "./PuzzleTile";
 
 export default function PuzzleBoard() {
-  const { currentTiles, selectedTile } = usePuzzleSelector();
+  const { currentTiles, activeTile } = usePuzzleSelector();
   const dispatch = usePuzzleDispatch();
 
-  const selectedTileIndex = currentTiles.findIndex(
-    (value) => value === selectedTile
+  const activeTileIndex = currentTiles.findIndex(
+    (value) => value === activeTile
   );
 
   const puzzleTiles = currentTiles.map((value, index) => (
     <PuzzleTile
       key={index}
       value={value}
-      isActive={selectedTileIndex === index}
+      isWhiteSpace={value === 16}
+      isActive={activeTileIndex === index}
       onClick={() => {
         dispatch({ type: "clicked_tile", value });
       }}

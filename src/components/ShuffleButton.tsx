@@ -1,7 +1,6 @@
 import { MdRefresh } from "react-icons/md";
 import { usePuzzleDispatch } from "../hooks";
 
-// TODO: implement the shuffle functionality
 export default function ShuffleButton() {
   const dispatch = usePuzzleDispatch();
 

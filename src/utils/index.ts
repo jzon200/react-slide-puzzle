@@ -12,4 +12,10 @@ function isEven(value: number) {
   return value % 2 === 0;
 }
 
-export { generatePuzzle, isEven };
+function isOdd(value: number) {
+  return value % 2 === 1;
+}
+
+const CORRECT_TILES = generatePuzzle();
+
+export { CORRECT_TILES, isEven, isOdd };

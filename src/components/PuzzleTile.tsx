@@ -1,13 +1,18 @@
 type Props = {
   value: string | number;
   isActive: boolean;
+  isWhiteSpace: boolean;
   onClick: () => void;
 };
 
 // TODO: Add animation on clicked tile
-export default function PuzzleTile({ value, isActive, onClick }: Props) {
-  if (value === 16) {
-    //* whitespace
+export default function PuzzleTile({
+  value,
+  isWhiteSpace,
+  isActive,
+  onClick,
+}: Props) {
+  if (isWhiteSpace) {
     return <div />;
   }
 
