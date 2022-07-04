@@ -1,17 +1,18 @@
 import { isEqual, shuffle } from "lodash";
 import { createContext, Dispatch } from "react";
 
-import { CORRECT_TILES, isEven, isOdd } from "../utils";
+import { CORRECT_TILES } from "../utils";
 
 type PuzzleState = {
-  currentTiles: number[];
+  currentTiles: number[][];
   activeTile: number | null;
   moves: number;
   isSolved: boolean;
 };
 
 const initialPuzzleState: PuzzleState = {
-  currentTiles: shuffle(CORRECT_TILES),
+  // TODO: Shuffle 2D Array Puzzle Tiles Effeciently
+  currentTiles: CORRECT_TILES.map((value) => shuffle(value)),
   activeTile: null,
   moves: 0,
   isSolved: false,
@@ -29,36 +30,124 @@ function puzzleReducer(draft: PuzzleState, action: ACTIONTYPE) {
         break;
       }
 
-      const whiteSpaceIndex = draft.currentTiles.findIndex(
-        (value) => value === 16
+      const selectedTileRowIndex = draft.currentTiles.findIndex((value) =>
+        value.find((value) => value === action.value)
       );
-      const selectedTileIndex = draft.currentTiles.findIndex(
-        (value) => value === action.value
+      const selectedTileColIndex = draft.currentTiles[
+        selectedTileRowIndex
+      ].findIndex((value) => value === action.value);
+      console.log("selected:", selectedTileRowIndex, selectedTileColIndex);
+
+      const whiteSpaceRowIndex = draft.currentTiles.findIndex((value) =>
+        value.find((value) => value === 16)
       );
+      const whiteSpaceColIndex = draft.currentTiles[
+        whiteSpaceRowIndex
+      ].findIndex((value) => value === 16);
+      console.log("whitespace:", whiteSpaceRowIndex, whiteSpaceColIndex);
 
-      const isSolveableX =
-        selectedTileIndex === whiteSpaceIndex - 1 ||
-        selectedTileIndex === whiteSpaceIndex + 1;
+      // if the clicked tile is in the same row as the whitespace
+      const isSolveableX = selectedTileRowIndex === whiteSpaceRowIndex;
 
-      //! This causes a bug, because it only used odd or even logic
-      const isSolveableY =
-        (isOdd(selectedTileIndex) && isOdd(whiteSpaceIndex)) ||
-        (isEven(selectedTileIndex) && isEven(whiteSpaceIndex));
+      // if the clicked tile is in the same column as the white space
+      const isSolveableY = selectedTileColIndex === whiteSpaceColIndex;
 
-      //* Checks if the active tile and whitespace are close to each other
+      // TODO: To be simplified soon!
       if (isSolveableX || isSolveableY) {
-        //* Then, it swaps the active tile and whitespace in the currentTiles Array state.
-        draft.activeTile = action.value;
-        draft.currentTiles[selectedTileIndex] = 16;
-        draft.currentTiles[whiteSpaceIndex] = action.value;
-        draft.moves++;
+        // if the selected tile is close to whitespace
+        if (
+          selectedTileRowIndex === whiteSpaceRowIndex + 1 ||
+          selectedTileRowIndex === whiteSpaceRowIndex - 1 ||
+          selectedTileColIndex === whiteSpaceColIndex + 1 ||
+          selectedTileColIndex === whiteSpaceColIndex - 1
+        ) {
+          // then, swap their values
+          // Ex. [1, 2] => [2, 1]
+          [
+            draft.currentTiles[selectedTileRowIndex][selectedTileColIndex],
+            draft.currentTiles[whiteSpaceRowIndex][whiteSpaceColIndex],
+          ] = [
+            draft.currentTiles[whiteSpaceRowIndex][whiteSpaceColIndex],
+            draft.currentTiles[selectedTileRowIndex][selectedTileColIndex],
+          ];
+          // draft.currentTiles[selectedTileRowIndex][selectedTileColIndex] = 16;
+          // draft.currentTiles[whiteSpaceRowIndex][whiteSpaceColIndex] =
+          //   action.value;
+          break;
+        }
+      }
+
+      // TODO: To be simplified soon!
+      if (isSolveableX) {
+        if (selectedTileColIndex < whiteSpaceColIndex) {
+          const arr = [16];
+          for (let i = selectedTileColIndex; i < whiteSpaceColIndex; i++) {
+            const element = draft.currentTiles[selectedTileRowIndex][i];
+            arr.push(element);
+          }
+          console.log(arr);
+          draft.currentTiles[selectedTileRowIndex].splice(
+            selectedTileColIndex,
+            whiteSpaceColIndex + 1,
+            ...arr
+          );
+        } else {
+          const arr = [16];
+          for (let i = selectedTileColIndex; i > whiteSpaceColIndex; i--) {
+            const element = draft.currentTiles[selectedTileRowIndex][i];
+            arr.unshift(element);
+          }
+          draft.currentTiles[selectedTileRowIndex].splice(
+            whiteSpaceColIndex,
+            selectedTileColIndex + 1,
+            ...arr
+          );
+        }
+      }
+
+      // TODO: To be simplified soon!
+      if (isSolveableY) {
+        if (selectedTileRowIndex < whiteSpaceRowIndex) {
+          const arr = [16];
+          for (let i = selectedTileRowIndex; i < whiteSpaceRowIndex; i++) {
+            const element = draft.currentTiles[i][selectedTileColIndex];
+            arr.push(element);
+          }
+          console.log(arr);
+          for (let i = 0; i < arr.length; i++) {
+            // if the selected tile is in the first row
+            if (selectedTileRowIndex === 0) {
+              draft.currentTiles[i][selectedTileColIndex] = arr[i];
+            } else {
+              draft.currentTiles[i + 1][selectedTileColIndex] = arr[i];
+            }
+            // console.log(arr[i]);
+          }
+        } else {
+          const arr = [16];
+          for (let i = selectedTileRowIndex; i > whiteSpaceRowIndex; i--) {
+            const element = draft.currentTiles[i][selectedTileColIndex];
+            arr.unshift(element);
+          }
+          console.log(arr);
+          for (let i = 0; i < arr.length; i++) {
+            //* this prevents the bug, i just don't know yet how it works XD
+            if (selectedTileRowIndex === 3 && whiteSpaceRowIndex > 0) {
+              draft.currentTiles[i + 1][selectedTileColIndex] = arr[i];
+            } else {
+              draft.currentTiles[i][selectedTileColIndex] = arr[i];
+            }
+          }
+        }
       }
 
       draft.isSolved = isEqual(draft.currentTiles, CORRECT_TILES);
       break;
     }
     case "shuffled": {
-      draft.currentTiles = shuffle(draft.currentTiles);
+      draft.currentTiles = shuffle(
+        draft.currentTiles.map((value) => shuffle(value))
+      );
       draft.activeTile = null;
       draft.moves = 0;
       draft.isSolved = false;
@@ -70,8 +159,8 @@ function puzzleReducer(draft: PuzzleState, action: ACTIONTYPE) {
   }
 }
 
-const PuzzleContext = createContext<PuzzleState | null>(null)!;
-const PuzzleDispatchContext = createContext<Dispatch<ACTIONTYPE> | null>(null)!;
+const PuzzleContext = createContext<PuzzleState | null>(null);
+const PuzzleDispatchContext = createContext<Dispatch<ACTIONTYPE> | null>(null);
 
 export {
   initialPuzzleState,

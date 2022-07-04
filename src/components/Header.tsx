@@ -7,7 +7,9 @@ export default function Header() {
   const heading = isSolved ? "Well done. Congrats!" : "Puzzle Challenge";
 
   //* removes the whitespace tile
-  const puzzleTiles = currentTiles.filter((value) => value !== 16);
+  const puzzleTiles = currentTiles.filter(
+    (value, index) => value[index] !== 16
+  );
 
   //* filters the correct tiles
   const correctTilesLen = puzzleTiles.filter(
