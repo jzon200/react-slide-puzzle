@@ -1,26 +1,62 @@
-function generatePuzzle() {
-  const puzzleTiles: number[] = [];
+const CORRECT_TILES = generatePuzzle();
 
-  for (let i = 1; i <= 16; i++) {
-    puzzleTiles.push(i);
+/**
+ * @returns 4x4 Puzzle 2D Array
+ */
+function generatePuzzle() {
+  const sides = 4;
+  const puzzleTiles: number[][] = [];
+  let val = 1;
+
+  for (let row = 0; row < sides; row++) {
+    // Initialize every row as empty array
+    puzzleTiles[row] = [];
+    for (let col = 0; col < sides; col++) {
+      puzzleTiles[row][col] = val++;
+    }
   }
 
   return puzzleTiles;
 }
 
-function isEven(value: number) {
-  return value % 2 === 0;
+// TODO: Shuffle puzzle again if it is unsolvable
+function shufflePuzzle(array: number[][]) {
+  // converts 2D array to 1D array for easy manipulation
+  const normalized = [].concat(...(array as never[]));
+
+  const shuffled = normalized
+    .map((value) => ({
+      value,
+      random: Math.random(),
+    }))
+    .sort((a, b) => a.random - b.random)
+    .map(({ value }) => value);
+
+  const shuffledPuzzle: number[][] = [];
+
+  while (shuffled.length !== 0) {
+    shuffledPuzzle.push(shuffled.splice(0, 4));
+  }
+
+  return shuffledPuzzle;
 }
 
-function isOdd(value: number) {
-  return value % 2 === 1;
+function getCorrectTiles(array: number[][]) {
+  // converts 2D array to 1D array for easy manipulation
+  const puzzleTiles = []
+    .concat(...(array as never[]))
+    .filter((value) => value !== 16);
+
+  const correctTiles = []
+    .concat(...(CORRECT_TILES as never[]))
+    .filter((value) => value !== 16);
+
+  //* filters the length of correct tiles
+  const correctTilesLen = puzzleTiles.filter(
+    (value, index) => value === correctTiles[index]
+  ).length;
+
+  return correctTilesLen;
 }
 
-const CORRECT_TILES = [
-  [1, 2, 3, 4],
-  [5, 6, 7, 8],
-  [9, 10, 11, 12],
-  [13, 14, 15, 16],
-];
-
-export { CORRECT_TILES, generatePuzzle, isEven, isOdd };
+export { CORRECT_TILES, shufflePuzzle, getCorrectTiles };

@@ -1,22 +1,13 @@
 import { usePuzzleSelector } from "../hooks";
-import { CORRECT_TILES } from "../utils";
+import { getCorrectTiles } from "../utils";
 
 export default function Header() {
   const { moves, isSolved, currentTiles } = usePuzzleSelector();
 
   const heading = isSolved ? "Well done. Congrats!" : "Puzzle Challenge";
 
-  //* removes the whitespace tile
-  const puzzleTiles = currentTiles.filter(
-    (value, index) => value[index] !== 16
-  );
-
-  //* filters the correct tiles
-  const correctTilesLen = puzzleTiles.filter(
-    (value, index) => value === CORRECT_TILES[index]
-  ).length;
-
-  const tilesLeft = puzzleTiles.length - correctTilesLen;
+  const correctTiles = getCorrectTiles(currentTiles);
+  const tilesLeft = 15 - correctTiles;
 
   return (
     <header className="text-center">
