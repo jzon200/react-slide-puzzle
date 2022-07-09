@@ -1,19 +1,20 @@
-const CORRECT_TILES = generatePuzzle();
+const CORRECT_TILES = generatePuzzle(4);
 
 /**
- * @returns 4x4 Puzzle 2D Array
+ * @params size of puzzle
+ * @returns 4x4 2D Array Puzzle as default
  */
-function generatePuzzle() {
-  const sides = 4;
+function generatePuzzle(size: number = 4) {
+  const temp: number[] = [];
   const puzzleTiles: number[][] = [];
-  let val = 1;
 
-  for (let row = 0; row < sides; row++) {
-    // Initialize every row as empty array
-    puzzleTiles[row] = [];
-    for (let col = 0; col < sides; col++) {
-      puzzleTiles[row][col] = val++;
-    }
+  for (let i = 1; i <= size * size; i++) {
+    temp.push(i);
+  }
+
+  while (temp.length !== 0) {
+    puzzleTiles.push(temp.splice(0, size));
+    console.log(puzzleTiles);
   }
 
   return puzzleTiles;
@@ -35,28 +36,32 @@ function shufflePuzzle(array: number[][]) {
   const shuffledPuzzle: number[][] = [];
 
   while (shuffled.length !== 0) {
-    shuffledPuzzle.push(shuffled.splice(0, 4));
+    shuffledPuzzle.push(shuffled.splice(0, array.length));
   }
 
   return shuffledPuzzle;
 }
 
-function getCorrectTiles(array: number[][]) {
+function getTilesLeft(array: number[][]) {
   // converts 2D array to 1D array for easy manipulation
-  const puzzleTiles = []
-    .concat(...(array as never[]))
-    .filter((value) => value !== 16);
+  const normalized = [].concat(...(array as []));
+
+  const puzzleTiles = normalized.filter((value) => value !== normalized.length);
 
   const correctTiles = []
-    .concat(...(CORRECT_TILES as never[]))
-    .filter((value) => value !== 16);
+    .concat(...(CORRECT_TILES as []))
+    .filter((value) => value !== normalized.length);
 
   //* filters the length of correct tiles
   const correctTilesLen = puzzleTiles.filter(
     (value, index) => value === correctTiles[index]
   ).length;
 
-  return correctTilesLen;
+  // console.log(puzzleTiles, correctTiles, correctTilesLen);
+
+  const tilesLeft = puzzleTiles.length - correctTilesLen;
+
+  return tilesLeft;
 }
 
-export { CORRECT_TILES, shufflePuzzle, getCorrectTiles };
+export { CORRECT_TILES, shufflePuzzle, getTilesLeft };

@@ -1,13 +1,12 @@
 import { usePuzzleSelector } from "../hooks";
-import { getCorrectTiles } from "../utils";
+import { getTilesLeft } from "../utils";
 
 export default function Header() {
   const { moves, isSolved, currentTiles } = usePuzzleSelector();
 
   const heading = isSolved ? "Well done. Congrats!" : "Puzzle Challenge";
 
-  const correctTiles = getCorrectTiles(currentTiles);
-  const tilesLeft = 15 - correctTiles;
+  const tilesLeft = getTilesLeft(currentTiles);
 
   return (
     <header className="text-center">

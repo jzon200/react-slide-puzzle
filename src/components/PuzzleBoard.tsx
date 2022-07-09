@@ -5,29 +5,28 @@ export default function PuzzleBoard() {
   const { currentTiles, activeTile } = usePuzzleSelector();
   const dispatch = usePuzzleDispatch();
 
-  const puzzleTiles: JSX.Element[] = [];
+  const normalized = [].concat(...(currentTiles as never[]));
+  const maxValue = normalized.length;
 
-  for (let i = 0; i < currentTiles.length; i++) {
-    const row = currentTiles[i];
-    for (let j = 0; j < row.length; j++) {
-      const column = row[j];
-      puzzleTiles.push(
-        <PuzzleTile
-          key={column}
-          value={column}
-          isSpace={column === 16}
-          isActive={activeTile === column}
-          onClick={() => {
-            dispatch({ type: "moved_tile", value: column });
-          }}
-        />
-      );
-    }
-  }
+  const puzzleTiles = normalized.map((value) => (
+    <PuzzleTile
+      key={value}
+      value={value}
+      isSpace={value === maxValue}
+      isActive={value === activeTile}
+      onClick={() => {
+        dispatch({ type: "moved_tile", value: value });
+      }}
+    />
+  ));
+
+  const gridSize = Math.sqrt(maxValue); // √16 => 4
 
   return (
     <div className="flex justify-center">
-      <div className="grid grid-cols-[repeat(4,_80px)] place-items-center gap-2">
+      <div
+        className={`grid grid-cols-[repeat(${gridSize},_80px)] place-items-center gap-2`}
+      >
         {puzzleTiles}
       </div>
     </div>

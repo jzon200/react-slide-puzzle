@@ -29,6 +29,9 @@ function puzzleReducer(draft: PuzzleState, action: ACTIONTYPE) {
         break;
       }
 
+      // get the max value of tiles, used as an empty space
+      const maxValue = [].concat(...(currentTiles as [])).length;
+
       const selectedTileRowIndex = currentTiles.findIndex((value) =>
         value.find((value) => value === action.value)
       );
@@ -38,10 +41,10 @@ function puzzleReducer(draft: PuzzleState, action: ACTIONTYPE) {
       console.log("selected:", selectedTileRowIndex, selectedTileColIndex);
 
       const emptySpaceRowIndex = currentTiles.findIndex((value) =>
-        value.find((value) => value === 16)
+        value.find((value) => value === maxValue)
       );
       const emptySpaceColIndex = currentTiles[emptySpaceRowIndex].findIndex(
-        (value) => value === 16
+        (value) => value === maxValue
       );
       console.log("empty space:", emptySpaceRowIndex, emptySpaceColIndex);
 
@@ -64,11 +67,11 @@ function puzzleReducer(draft: PuzzleState, action: ACTIONTYPE) {
 
         if (isAdjacent) {
           // then, swap the values of selected tile && empty space
-          currentTiles[selectedTileRowIndex][selectedTileColIndex] = 16;
+          currentTiles[selectedTileRowIndex][selectedTileColIndex] = maxValue;
           currentTiles[emptySpaceRowIndex][emptySpaceColIndex] = action.value;
         } else if (selectedTileColIndex < emptySpaceColIndex) {
           //* this is necessary to move the empty space at the selected tile
-          const temp = [16];
+          const temp = [maxValue];
 
           // accumulates each value of column for every row before empty space
           for (let i = selectedTileColIndex; i < emptySpaceColIndex; i++) {
@@ -86,7 +89,7 @@ function puzzleReducer(draft: PuzzleState, action: ACTIONTYPE) {
           );
         } else if (selectedTileColIndex > emptySpaceColIndex) {
           // same logic above, but reverse engineered
-          const temp = [16];
+          const temp = [maxValue];
 
           for (let i = selectedTileColIndex; i > emptySpaceColIndex; i--) {
             const element = currentTiles[selectedTileRowIndex][i];
@@ -101,26 +104,26 @@ function puzzleReducer(draft: PuzzleState, action: ACTIONTYPE) {
             ...temp
           );
         } else if (selectedTileRowIndex < emptySpaceRowIndex) {
-          const temp = [16];
+          const temp = [maxValue];
 
           for (let i = selectedTileRowIndex; i < emptySpaceRowIndex; i++) {
             const element = currentTiles[i][selectedTileColIndex];
-            temp.push(element);
+            temp.unshift(element);
           }
 
           console.log(temp);
 
-          // manipulate the y-values of selected row
-          for (let i = 0; i < temp.length; i++) {
-            if (selectedTileRowIndex === 0) {
-              currentTiles[i][selectedTileColIndex] = temp[i];
-            } else {
-              currentTiles[i + 1][selectedTileColIndex] = temp[i];
-            }
+          // iterates the y-values of a selected column,
+          // then mutates a new order from temp
+          for (let i = selectedTileRowIndex; i <= emptySpaceRowIndex; i++) {
+            currentTiles[i][selectedTileColIndex] =
+              temp[emptySpaceRowIndex - i];
+
+            console.log(i, temp[emptySpaceRowIndex - i]);
           }
         } else if (selectedTileRowIndex > emptySpaceRowIndex) {
           // same logic above, but reverse engineered
-          const temp = [16];
+          const temp = [maxValue];
 
           for (let i = selectedTileRowIndex; i > emptySpaceRowIndex; i--) {
             const element = currentTiles[i][selectedTileColIndex];
@@ -129,13 +132,11 @@ function puzzleReducer(draft: PuzzleState, action: ACTIONTYPE) {
 
           console.log(temp);
 
-          for (let i = 0; i < temp.length; i++) {
-            //* this prevents the bug, i just don't know yet how it works XD
-            if (selectedTileRowIndex === 3 && emptySpaceRowIndex > 0) {
-              currentTiles[i + 1][selectedTileColIndex] = temp[i];
-            } else {
-              currentTiles[i][selectedTileColIndex] = temp[i];
-            }
+          for (let i = selectedTileRowIndex; i >= emptySpaceRowIndex; i--) {
+            currentTiles[i][selectedTileColIndex] =
+              temp[i - emptySpaceRowIndex];
+
+            console.log(i, temp[i - emptySpaceRowIndex]);
           }
         }
       }
