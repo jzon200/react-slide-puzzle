@@ -116,10 +116,11 @@ function puzzleReducer(draft: PuzzleState, action: ACTIONTYPE) {
           // iterates the y-values of a selected column,
           // then mutates a new order from temp
           for (let i = selectedTileRowIndex; i <= emptySpaceRowIndex; i++) {
-            currentTiles[i][selectedTileColIndex] =
-              temp[emptySpaceRowIndex - i];
+            const newValue = temp[emptySpaceRowIndex - i];
 
-            console.log(i, temp[emptySpaceRowIndex - i]);
+            currentTiles[i][selectedTileColIndex] = newValue;
+
+            console.log(i, newValue);
           }
         } else if (selectedTileRowIndex > emptySpaceRowIndex) {
           // same logic above, but reverse engineered
@@ -133,10 +134,11 @@ function puzzleReducer(draft: PuzzleState, action: ACTIONTYPE) {
           console.log(temp);
 
           for (let i = selectedTileRowIndex; i >= emptySpaceRowIndex; i--) {
-            currentTiles[i][selectedTileColIndex] =
-              temp[i - emptySpaceRowIndex];
+            const newValue = temp[i - emptySpaceRowIndex];
 
-            console.log(i, temp[i - emptySpaceRowIndex]);
+            currentTiles[i][selectedTileColIndex] = newValue;
+
+            console.log(i, temp[i - newValue]);
           }
         }
       }

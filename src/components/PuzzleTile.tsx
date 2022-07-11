@@ -1,18 +1,18 @@
 type Props = {
   value: string | number;
   isActive: boolean;
-  isSpace: boolean;
+  isEmptySpace: boolean;
   onClick: () => void;
 };
 
 // TODO: Add animation on clicked tile
 export default function PuzzleTile({
   value,
-  isSpace,
+  isEmptySpace,
   isActive,
   onClick,
 }: Props) {
-  if (isSpace) {
+  if (isEmptySpace) {
     return <div />;
   }
 

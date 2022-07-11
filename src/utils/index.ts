@@ -1,10 +1,10 @@
 const CORRECT_TILES = generatePuzzle(4);
 
 /**
- * @params size of puzzle
- * @returns 4x4 2D Array Puzzle as default
+ * @params Size of Puzzle.
+ * @returns 2D array Puzzle Board.
  */
-function generatePuzzle(size: number = 4) {
+function generatePuzzle(size: number) {
   const temp: number[] = [];
   const puzzleTiles: number[][] = [];
 
@@ -12,20 +12,20 @@ function generatePuzzle(size: number = 4) {
     temp.push(i);
   }
 
+  // passed the temp as value of 2D Array
   while (temp.length !== 0) {
     puzzleTiles.push(temp.splice(0, size));
-    console.log(puzzleTiles);
   }
 
   return puzzleTiles;
 }
 
 // TODO: Shuffle puzzle again if it is unsolvable
-function shufflePuzzle(array: number[][]) {
+function shufflePuzzle(puzzleTiles: number[][]) {
   // converts 2D array to 1D array for easy manipulation
-  const normalized = [].concat(...(array as never[]));
+  const cleaned = [].concat(...(puzzleTiles as []));
 
-  const shuffled = normalized
+  const shuffled = cleaned
     .map((value) => ({
       value,
       random: Math.random(),
@@ -36,30 +36,30 @@ function shufflePuzzle(array: number[][]) {
   const shuffledPuzzle: number[][] = [];
 
   while (shuffled.length !== 0) {
-    shuffledPuzzle.push(shuffled.splice(0, array.length));
+    shuffledPuzzle.push(shuffled.splice(0, puzzleTiles.length));
   }
 
   return shuffledPuzzle;
 }
 
-function getTilesLeft(array: number[][]) {
-  // converts 2D array to 1D array for easy manipulation
-  const normalized = [].concat(...(array as []));
+/**
+ * @param puzzleTiles Current Puzzle Tiles y & x position.
+ * @returns The amount of incorrect Puzzle y & x position.
+ */
+function getTilesLeft(puzzleTiles: number[][]) {
+  const cleaned: number[] = [].concat(...(puzzleTiles as []));
+  const correctTiles: number[] = [].concat(...(CORRECT_TILES as []));
 
-  const puzzleTiles = normalized.filter((value) => value !== normalized.length);
+  const tilesLeft = cleaned.reduce((accumulator, currentValue, index) => {
+    // ignores the correct position of empty space
+    if (currentValue === cleaned.length) {
+      return accumulator;
+    }
 
-  const correctTiles = []
-    .concat(...(CORRECT_TILES as []))
-    .filter((value) => value !== normalized.length);
+    const correctTilesLen = currentValue === correctTiles[index] ? 1 : 0;
 
-  //* filters the length of correct tiles
-  const correctTilesLen = puzzleTiles.filter(
-    (value, index) => value === correctTiles[index]
-  ).length;
-
-  // console.log(puzzleTiles, correctTiles, correctTilesLen);
-
-  const tilesLeft = puzzleTiles.length - correctTilesLen;
+    return accumulator - correctTilesLen;
+  }, cleaned.length - 1);
 
   return tilesLeft;
 }
