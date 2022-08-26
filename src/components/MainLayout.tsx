@@ -1,4 +1,4 @@
-import { Fragment, ReactNode } from "react";
+import { ReactNode } from "react";
 import Header from "./Header";
 
 type Props = {
@@ -7,9 +7,11 @@ type Props = {
 
 export default function MainLayout(props: Props) {
   return (
-    <Fragment>
-      <Header />
-      <main>{props.children}</main>
-    </Fragment>
+    <div className="grid place-items-center h-screen">
+      <div className="mb-40">
+        <Header />
+        <main>{props.children}</main>
+      </div>
+    </div>
   );
 }

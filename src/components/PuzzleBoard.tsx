@@ -23,13 +23,10 @@ export default function PuzzleBoard() {
   const gridColSize = Math.sqrt(maxValue); // √16 => 4
 
   return (
-    <div className="flex justify-center">
-      <div
-        className="grid place-items-center gap-2"
-        style={{ gridTemplateColumns: `repeat(${gridColSize}, 80px)` }}
-      >
-        {puzzleTiles}
-      </div>
+    <div
+      className="grid place-items-center gap-2"
+      style={{ gridTemplateColumns: `repeat(${gridColSize}, 80px)` }}>
+      {puzzleTiles}
     </div>
   );
 }
